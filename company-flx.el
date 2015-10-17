@@ -197,7 +197,18 @@
                     (> (cdr c1)
                        (cdr c2)))))))
 
-(setq company-transformers (list #'company-flx-transformer))
+(define-minor-mode company-flx-mode
+  "company-flx minor mode"
+  :init-value nil
+  :group 'company-flx
+  :global t
+  (if company-flx-mode
+      (progn
+        (advice-add 'company-capf :around #'company-flx-company-capf-advice)
+        (add-to-list 'company-transformers #'company-flx-transformer t))
+
+    (advice-remove 'company-capf #'company-flx-company-capf-advice)
+    (delete #'company-flx-transformer company-transformers)))
 
 (provide 'company-flx)
 ;;; company-flx.el ends here
