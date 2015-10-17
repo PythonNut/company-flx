@@ -33,8 +33,17 @@
     (require 'company)
     (require 'flx)))
 
-(defvar company-flx-cache)
-(defvar company-flx-limit 500)
+(defgroup company-flx nil
+  "Sort helm candidates by flx score"
+  :group 'convenience
+  :prefix "company-flx-")
+
+(defcustom company-flx-limit 500
+  "The maximum number of company candidates to flx sort"
+  :type 'number
+  :group 'company-flx)
+
+(defvar company-flx-cache "Stores company-mode's flx-cache")
 
 (defun company-flx-commonality (strs)
   (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
@@ -157,12 +166,6 @@
 (defun company-flx-all-completions (string table predicate point)
   (company-flx-completion string table predicate point 'all))
 
-(add-to-list 'completion-styles-alist
-             '(fuzzy
-               company-flx-try-completion
-               company-flx-all-completions
-               "An intelligent fuzzy matching completion style."))
-
 (defun company-flx-company-capf-advice (old-fun &rest args)
   (let ((completion-styles (list 'fuzzy)))
     (apply old-fun args)))
@@ -204,6 +207,12 @@
   :global t
   (if company-flx-mode
       (progn
+        (add-to-list 'completion-styles-alist
+                     '(fuzzy
+                       company-flx-try-completion
+                       company-flx-all-completions
+                       "An intelligent fuzzy matching completion style."))
+
         (advice-add 'company-capf :around #'company-flx-company-capf-advice)
         (add-to-list 'company-transformers #'company-flx-transformer t))
 
