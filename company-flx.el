@@ -39,6 +39,8 @@
 
 ;;; Code:
 
+(require 'company)
+
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
