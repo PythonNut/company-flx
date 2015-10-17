@@ -16,3 +16,10 @@ After the package is installed, you can enable `company-flx` by adding:
 ```
 
 To your init file.
+
+Some History
+============
+
+Crazy stuff simmers in my [`emacs-config`](https://github.com/PythonNut/emacs-config), and every once and a while, it's worth sharing. [This was no exception](https://github.com/PythonNut/emacs-config/blob/f1df3ac16410bfa72d88855325bd6c2de56f587b/modules/config-helm.el#L33#L89). It's been patiently evolving in my config for the better part of a year, and I think it's useful enough to benefit other people.
+
+Also of interest is [company-mode/**company-mode** #47](https://github.com/company-mode/company-mode/issues/47).
