@@ -1,4 +1,31 @@
-;; -*- lexical-binding: t -*-
+;;; company-flx.el --- flx based fuzzy matching for company -*- lexical-binding: t -*-
+
+;; Copyright (C) 2015 PythonNut
+
+;; Author: PythonNut <pythonnut@pythonnut.com>
+;; Keywords: convenience, company, fuzzy, flx
+;; Version: 20151016
+;; URL: https://github.com/PythonNut/helm-flx
+;; Package-Requires: ((emacs "24") (company "0.8.12") (flx "0.5"))
+
+;;; License:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;;; Code:
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
@@ -9,46 +36,45 @@
 (defvar company-flx-cache)
 (defvar company-flx-limit 500)
 
-(with-no-warnings
-  (defun company-flx-commonality (strs)
-    (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
-               ((symbol-function
-                 #'fuzzy-commonality)
-                (lambda (strs)
-                  (let ((hash-value (gethash strs commonality-cache nil)))
-                    (if hash-value
-                        (if (eq hash-value 'nothing)
-                            nil
-                          hash-value)
+(defun company-flx-commonality (strs)
+  (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
+             ((symbol-function
+               #'fuzzy-commonality)
+              (lambda (strs)
+                (let ((hash-value (gethash strs commonality-cache nil)))
+                  (if hash-value
+                      (if (eq hash-value 'nothing)
+                          nil
+                        hash-value)
 
-                      (setq strs (mapcar #'string-to-list strs))
-                      (let ((res) (tried) (idx))
-                        (dolist (char (car strs))
-                          (unless (memq char tried)
-                            (catch 'notfound
-                              (setq idx (mapcar (lambda (str)
-                                                  (or
-                                                   (cl-position char str)
-                                                   (throw 'notfound nil)))
-                                                strs))
-                              (push (cons char
-                                          (fuzzy-commonality
-                                           (cl-mapcar (lambda (str idx)
-                                                        (cl-subseq str (1+ idx)))
-                                                      strs idx)))
-                                    res)
-                              (push char tried))))
-                        (setq res (if res
-                                      (cl-reduce
-                                       (lambda (a b)
-                                         (if (> (length a) (length b)) a b))
-                                       res)
-                                    nil))
-                        (puthash strs
-                                 (if res res 'nothing)
-                                 commonality-cache)
-                        res))))))
-      (concat (fuzzy-commonality strs)))))
+                    (setq strs (mapcar #'string-to-list strs))
+                    (let ((res) (tried) (idx))
+                      (dolist (char (car strs))
+                        (unless (memq char tried)
+                          (catch 'notfound
+                            (setq idx (mapcar (lambda (str)
+                                                (or
+                                                 (cl-position char str)
+                                                 (throw 'notfound nil)))
+                                              strs))
+                            (push (cons char
+                                        (fuzzy-commonality
+                                         (cl-mapcar (lambda (str idx)
+                                                      (cl-subseq str (1+ idx)))
+                                                    strs idx)))
+                                  res)
+                            (push char tried))))
+                      (setq res (if res
+                                    (cl-reduce
+                                     (lambda (a b)
+                                       (if (> (length a) (length b)) a b))
+                                     res)
+                                  nil))
+                      (puthash strs
+                               (if res res 'nothing)
+                               commonality-cache)
+                      res))))))
+    (concat (fuzzy-commonality strs))))
 
 (defun company-flx-find-holes (merged str)
   (let ((holes) (matches (cdr (flx-score str merged company-flx-cache))))
@@ -173,4 +199,5 @@
 
 (setq company-transformers (list #'company-flx-transformer))
 
-(provide 'config-company)
+(provide 'company-flx)
+;;; company-flx.el ends here
