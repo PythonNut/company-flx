@@ -44,7 +44,6 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
-    (require 'company)
     (require 'flx)))
 
 (defgroup company-flx nil
@@ -60,6 +59,7 @@
 (defvar company-flx-cache "Stores company-mode's flx-cache")
 
 (defun company-flx-commonality (strs)
+  "Return the largest string that fuzzy matches all STRS"
   (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
              ((symbol-function
                #'fuzzy-commonality)
@@ -100,6 +100,7 @@
     (concat (fuzzy-commonality strs))))
 
 (defun company-flx-find-holes (merged str)
+  "Find positions in MERGED, where insertion by the user is likely, wrt. STR"
   (let ((holes) (matches (cdr (flx-score str merged company-flx-cache))))
     (dolist (i (number-sequence 0 (- (length matches) 2)))
       (when (>
@@ -111,6 +112,7 @@
     holes))
 
 (defun company-flx-merge (strs)
+  "Merge a collection of strings, including their collective holes"
   (let ((common (company-flx-commonality strs))
         (holes))
     (setq holes (make-vector (1+ (length common)) 0))
@@ -122,6 +124,7 @@
 
 (defun company-flx-completion (string table predicate point
                                       &optional all-p)
+  "Helper function implementing a fuzzy completion-style"
   (let* ((beforepoint (substring string 0 point))
          (afterpoint (substring string point))
          (boundaries (completion-boundaries beforepoint table predicate afterpoint))
@@ -176,8 +179,10 @@
                 (cl-position (apply #'max holes) holes)))))))))
 
 (defun company-flx-try-completion (string table predicate point)
+  "Fuzzy version of completion-try-completion"
   (company-flx-completion string table predicate point))
 (defun company-flx-all-completions (string table predicate point)
+  "Fuzzy version of completion-all-completions"
   (company-flx-completion string table predicate point 'all))
 
 (defun company-flx-company-capf-advice (old-fun &rest args)
@@ -185,6 +190,7 @@
     (apply old-fun args)))
 
 (defun company-flx-transformer (cands)
+  "Sort up to company-flx-limit candidates by their flx score."
   (require 'flx)
   (or company-flx-cache
       (setq company-flx-cache (flx-make-string-cache #'flx-get-heatmap-str)))
