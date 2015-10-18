@@ -187,7 +187,7 @@
 (defun company-flx-transformer (cands)
   (require 'flx)
   (or company-flx-cache
-      (setq company-flx-cache (flx-make-string-cache 'flx-get-heatmap-str)))
+      (setq company-flx-cache (flx-make-string-cache #'flx-get-heatmap-str)))
 
   (let ((num-cands (length cands)))
     (mapcar #'car
@@ -197,7 +197,7 @@
                            (or (car (flx-score cand
                                                company-prefix
                                                company-flx-cache))
-                               0)))
+                               most-negative-fixnum)))
                    (if (< num-cands company-flx-limit)
                        cands
                      (let ((seq (sort cands (lambda (c1 c2)
