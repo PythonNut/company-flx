@@ -231,7 +231,8 @@
         (add-to-list 'company-transformers #'company-flx-transformer t))
 
     (advice-remove 'company-capf #'company-flx-company-capf-advice)
-    (delete #'company-flx-transformer company-transformers)))
+    (setq company-transformers
+          (delete #'company-flx-transformer company-transformers))))
 
 (provide 'company-flx)
 ;;; company-flx.el ends here
