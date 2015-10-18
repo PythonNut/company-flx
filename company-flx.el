@@ -5,7 +5,7 @@
 ;; Author: PythonNut <pythonnut@pythonnut.com>
 ;; Keywords: convenience, company, fuzzy, flx
 ;; Version: 20151016
-;; URL: https://github.com/PythonNut/helm-flx
+;; URL: https://github.com/PythonNut/company-flx
 ;; Package-Requires: ((emacs "24") (company "0.8.12") (flx "0.5"))
 
 ;;; License:
@@ -39,6 +39,8 @@
 
 ;;; Code:
 
+(require 'company)
+
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
@@ -46,7 +48,7 @@
     (require 'flx)))
 
 (defgroup company-flx nil
-  "Sort helm candidates by flx score"
+  "Sort company candidates by flx score"
   :group 'convenience
   :prefix "company-flx-")
 
