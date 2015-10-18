@@ -214,6 +214,7 @@
                     (> (cdr c1)
                        (cdr c2)))))))
 
+;;;###autoload
 (define-minor-mode company-flx-mode
   "company-flx minor mode"
   :init-value nil
