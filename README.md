@@ -1,5 +1,7 @@
-`company-flx`
-=============
+company-flx
+===========
+
+[![MELPA](http://melpa.org/packages/company-flx-badge.svg)](http://melpa.org/#/company-flx)
 
 This package adds fuzzy matching to company, powered by the sophisticated sorting heuristics in flx.
 
