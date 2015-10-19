@@ -56,7 +56,8 @@
   :type 'number
   :group 'company-flx)
 
-(defvar company-flx-cache "Stores company-mode's flx-cache")
+(defvar company-flx-cache nil
+  "Stores company-mode's flx-cache")
 
 (defun company-flx-commonality (strs)
   "Return the largest string that fuzzy matches all STRS"
