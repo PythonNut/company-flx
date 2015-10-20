@@ -207,16 +207,15 @@
                                most-negative-fixnum)))
                    (if (< num-cands company-flx-limit)
                        cands
-                     (let ((seq (sort cands (lambda (c1 c2)
+                     (let* ((seq (sort cands (lambda (c1 c2)
                                               (< (length c1)
                                                  (length c2)))))
                            (end (min company-flx-limit
-                                     num-cands))
+                                     num-cands
+                                     (length seq)))
                            (result nil))
-                       (while (and seq
-                                   (>= (setq end (1- end)) 0))
-                         (push (pop seq) result))
-                       result)))
+                       (dotimes (_ end  result)
+                         (push (pop seq) result)))))
                   (lambda (c1 c2)
                     (> (cdr c1)
                        (cdr c2)))))))
