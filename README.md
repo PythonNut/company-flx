@@ -17,6 +17,8 @@ After the package is installed, you can enable `company-flx` by adding the follo
   (company-flx-mode +1))
 ```
 
+Use the variable `company-flx-limit` to control the number of candidates that are scored by `flx`. `flx` can be slow, and the default is set rather high, so if you experience lag, consider lowering the limit.
+
 Some History
 ============
 
