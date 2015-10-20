@@ -23,3 +23,10 @@ Some History
 Crazy stuff simmers in my [`emacs-config`](https://github.com/PythonNut/emacs-config), and every once and a while, it's worth sharing. [This was no exception](https://github.com/PythonNut/emacs-config/blob/f1df3ac16410bfa72d88855325bd6c2de56f587b/modules/config-helm.el#L33#L89). It's been patiently evolving in my config for the better part of a year, and I think it's useful enough to benefit other people.
 
 Also of interest is [company-mode/**company-mode** #47](https://github.com/company-mode/company-mode/issues/47).
+
+Ceveats
+=======
+
+This only works with the `company-capf` backend. Most sources use this backend, with the exception of the more advanced sources. Most backends should be re-written in terms of `completion-at-point-functions` eventually, although it's going to take a while.
+
+The most important source that doesn't work is `company-dabbrev`.
