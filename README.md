@@ -26,7 +26,7 @@ Crazy stuff simmers in my [`emacs-config`](https://github.com/PythonNut/emacs-co
 
 Also of interest is [company-mode/**company-mode** #47](https://github.com/company-mode/company-mode/issues/47).
 
-Ceveats
+Caveats
 =======
 
 This only works with the `company-capf` backend. Most sources use this backend, with the exception of the more advanced sources. Most backends should be re-written in terms of `completion-at-point-functions` eventually, although it's going to take a while.
