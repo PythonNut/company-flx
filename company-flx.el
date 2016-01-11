@@ -148,7 +148,8 @@
                           infix
                           "")))
          (completion-regexp-list (cons regexp completion-regexp-list))
-         (candidates (all-completions prefix table predicate)))
+         (candidates (or (all-completions prefix table predicate)
+                         (all-completions infix table predicate))))
 
     (if all-p
         ;; Implement completion-all-completions interface
