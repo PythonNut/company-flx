@@ -102,6 +102,7 @@
 
 (defun company-flx-find-holes (merged str)
   "Find positions in MERGED, where insertion by the user is likely, wrt. STR"
+  (require 'flx)
   (let ((holes) (matches (cdr (flx-score str merged company-flx-cache))))
     (dolist (i (number-sequence 0 (- (length matches) 2)))
       (when (>
