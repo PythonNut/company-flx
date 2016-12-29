@@ -210,17 +210,21 @@
                    (if (< num-cands company-flx-limit)
                        cands
                      (let* ((seq (sort cands (lambda (c1 c2)
-                                              (< (length c1)
-                                                 (length c2)))))
-                           (end (min company-flx-limit
-                                     num-cands
-                                     (length seq)))
-                           (result nil))
+                                               (< (length c1)
+                                                  (length c2)))))
+                            (end (min company-flx-limit
+                                      num-cands
+                                      (length seq)))
+                            (result nil))
                        (dotimes (_ end  result)
                          (push (pop seq) result)))))
                   (lambda (c1 c2)
-                    (> (cdr c1)
-                       (cdr c2)))))))
+                    ;; break ties by length
+                    (if (/= (cdr c1) (cdr c2))
+                        (> (cdr c1)
+                           (cdr c2))
+                      (< (length (car c1))
+                         (length (car c2)))))))))
 
 ;;;###autoload
 (define-minor-mode company-flx-mode
