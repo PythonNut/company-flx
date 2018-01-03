@@ -1,6 +1,6 @@
 ;;; company-flx.el --- flx based fuzzy matching for company -*- lexical-binding: t -*-
 
-;; Copyright (C) 2015 PythonNut
+;; Copyright (C) 2015, 2018 PythonNut
 
 ;; Author: PythonNut <pythonnut@pythonnut.com>
 ;; Keywords: convenience, company, fuzzy, flx
