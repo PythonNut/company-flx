@@ -41,10 +41,7 @@
 
 (require 'company)
 (require 'cl-lib)
-
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'flx)))
+(require 'flx)
 
 (defgroup company-flx nil
   "Sort company candidates by flx score"
@@ -102,7 +99,6 @@
 
 (defun company-flx-find-holes (merged str)
   "Find positions in MERGED, where insertion by the user is likely, wrt. STR"
-  (require 'flx)
   (let ((holes) (matches (cdr (flx-score str merged company-flx-cache))))
     (dolist (i (number-sequence 0 (- (length matches) 2)))
       (when (>
@@ -194,7 +190,6 @@
 
 (defun company-flx-transformer (cands)
   "Sort up to company-flx-limit candidates by their flx score."
-  (require 'flx)
   (or company-flx-cache
       (setq company-flx-cache (flx-make-string-cache #'flx-get-heatmap-str)))
 
