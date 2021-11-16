@@ -58,44 +58,42 @@
 
 (defun company-flx-commonality (strs)
   "Return the largest string that fuzzy matches all STRS"
-  (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
-             ((symbol-function
-               #'fuzzy-commonality)
-              (lambda (strs)
-                (let ((hash-value (gethash strs commonality-cache nil)))
-                  (if hash-value
-                      (if (eq hash-value 'nothing)
-                          nil
-                        hash-value)
+  (let ((commonality-cache (make-hash-table :test 'equal :size 200)))
+    (cl-labels ((fuzzy-commonality (strs)
+                  (let ((hash-value (gethash strs commonality-cache nil)))
+                    (if hash-value
+                        (if (eq hash-value 'nothing)
+                            nil
+                          hash-value)
 
-                    (setq strs (mapcar #'string-to-list strs))
-                    (let ((res) (tried) (idx))
-                      (dolist (char (car strs))
-                        (unless (memq char tried)
-                          (catch 'notfound
-                            (setq idx (mapcar (lambda (str)
-                                                (or
-                                                 (cl-position char str)
-                                                 (throw 'notfound nil)))
-                                              strs))
-                            (push (cons char
-                                        (fuzzy-commonality
-                                         (cl-mapcar (lambda (str idx)
-                                                      (cl-subseq str (1+ idx)))
-                                                    strs idx)))
-                                  res)
-                            (push char tried))))
-                      (setq res (if res
-                                    (cl-reduce
-                                     (lambda (a b)
-                                       (if (> (length a) (length b)) a b))
-                                     res)
-                                  nil))
-                      (puthash strs
-                               (if res res 'nothing)
-                               commonality-cache)
-                      res))))))
-    (concat (fuzzy-commonality strs))))
+                      (setq strs (mapcar #'string-to-list strs))
+                      (let ((res) (tried) (idx))
+                        (dolist (char (car strs))
+                          (unless (memq char tried)
+                            (catch 'notfound
+                              (setq idx (mapcar (lambda (str)
+                                                  (or
+                                                   (cl-position char str)
+                                                   (throw 'notfound nil)))
+                                                strs))
+                              (push (cons char
+                                          (fuzzy-commonality
+                                           (cl-mapcar (lambda (str idx)
+                                                        (cl-subseq str (1+ idx)))
+                                                      strs idx)))
+                                    res)
+                              (push char tried))))
+                        (setq res (if res
+                                      (cl-reduce
+                                       (lambda (a b)
+                                         (if (> (length a) (length b)) a b))
+                                       res)
+                                    nil))
+                        (puthash strs
+                                 (if res res 'nothing)
+                                 commonality-cache)
+                        res)))))
+      (concat (fuzzy-commonality strs)))))
 
 (defun company-flx-find-holes (merged str)
   "Find positions in MERGED, where insertion by the user is likely, wrt. STR"
